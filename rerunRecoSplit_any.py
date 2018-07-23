@@ -1,4 +1,4 @@
-# Config a script to do reco for ALL defined Id channels
+# script to do reco for ANY ifile, ijob for defined Id channels
 
 from DIRAC.Core.Base import Script
 Script.parseCommandLine()
@@ -13,7 +13,7 @@ ILCSoftVer    = "ILCSoft-02-00-01_gcc49"
 detectorModel = "ILD_l5_o2_v02"
 
 energy = 250
-evtsPerRun = 201
+evtsPerRun = 201 # Marlin (201) - ddsim(200)  different loops ???
 
 ireq="I" + str($idChannel)
 iFile=$ixnfile
@@ -30,24 +30,16 @@ idin = ireq + ix
 
 if   ireq == "I106485" :
    infile = "E" + str(energy) + "-TDR_ws.Pqqh.Gwhizard-1_95.eL.pR." + idin
-   lcinputpath  = "LFN:/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/higgs/"
    chann ="higgs"
 elif   ireq == "I106486" :
    infile = "E" + str(energy) + "-TDR_ws.Pqqh.Gwhizard-1_95.eR.pL." + idin
-   lcinputpath  = "LFN:/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/higgs/"
    chann ="higgs"
-elif   ireq == "I106563" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pL." + idin
-   chann ="sW_sl"
-elif ireq == "I106564" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pR." + idin
-   chann ="sW_sl"
-elif ireq == "I106565" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pR." + idin
-   chann ="sW_sl"
-elif ireq == "I106566" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pL." + idin
-   chann ="sW_sl"
+elif ireq == "I106551" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eL.pR." + idin
+   chann ="WW_h"
+elif ireq == "I106552" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eR.pL." + idin
+   chann ="WW_h"
 elif ireq == "I106559" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_sze_sl.Gwhizard-1_95.eL.pL." + idin
    chann ="sZe_sl"
@@ -60,6 +52,18 @@ elif ireq == "I106561" :
 elif ireq == "I106562" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_sze_sl.Gwhizard-1_95.eR.pL." + idin
    chann ="sZe_sl"
+elif ireq == "I106563" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pL." + idin
+   chann ="sW_sl"
+elif ireq == "I106564" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pR." + idin
+   chann ="sW_sl"
+elif ireq == "I106565" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pR." + idin
+   chann ="sW_sl"
+elif ireq == "I106566" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pL." + idin
+   chann ="sW_sl"
 elif ireq == "I106571" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_sznu_sl.Gwhizard-1_95.eL.pR." + idin
    chann ="sZnu_sl"
@@ -84,28 +88,20 @@ elif ireq == "I106577" :
 elif ireq == "I106578" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_ww_sl.Gwhizard-1_95.eR.pL." + idin
    chann ="WW_sl"
-elif ireq == "I106551" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eL.pR." + idin
-   chann ="WW_h"
-elif ireq == "I106552" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eR.pL." + idin
-   chann ="WW_h"
 elif ireq == "I106607" :
    infile = "E" + str(energy) + "-TDR_ws.P2f_z_h.Gwhizard-1_95.eL.pR." + idin
-   lcinputpath="LFN:/grid/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/2f/"
    chann ="Z_h"
 elif ireq == "I106608" :
    infile = "E" + str(energy) + "-TDR_ws.P2f_z_h.Gwhizard-1_95.eR.pL." + idin
-   lcinputpath="LFN:/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/2f/"
    chann ="Z_h"
-
 else:
      print "Wrong Channel Id !!!!" , inChannel
 
 jobGrName="group_" + chann
-print infile, jobGrName
 
 genfile = infile + ".stdhep"
+print genfile, jobGrName
+
 detModelSim = "ILD_l5_v02"
 simOutfile = "s" + ILDConfigVer + ".m" + detModelSim + ".LQGSP_BERT." + infile 
 recOutfile = "r" + ILDConfigVer + ".m" + detectorModel + ".LQGSP_BERT." + infile
@@ -124,13 +120,9 @@ else  :
 RECoutput = []  
 # outputs to be saved onto grid SE
 
-#RandSeed = random.randrange(11623, 99999)
-
-#  "_%n"  .... gets the corresponding split number !!!!
 jobname = "r" + idin + "_" + str(indx)
 print jobname
 
-#lcoutputSIM  = simOutfile + "_SIM_%s.slcio"%(indx) 
 lcoutputSIM  = simOutfile + "_%s.SIM.slcio"%(indx) 
 lcinputREC = "/ilc/user/k/kurca/MyProd_" + ILDConfigVer + "/E250-TDR_ws/" + chann + "/" + ireq +"/sim/" + lcoutputSIM
 print lcinputREC
@@ -142,12 +134,11 @@ lcoutputREC  = recOutfile + "_%s.REC.slcio"%(indx)
 ma = Marlin()
 ma.setVersion(ILCSoftVer)
 ma.setDetectorModel(detectorModel)
+ma.setEnergy(energy)
 ma.setSteeringFile("MarlinStdReco.xml")
 ma.setExtraCLIArguments(" --constant.DetectorModel=%s "%(detectorModel) )
 ma.setLogFile("marlin.log")
-#ma.getInputFromApp(sim)
 ma.setInputFile([lcoutputSIM])
-ma.setEnergy(energy)
 ma.setNumberOfEvents(evtsPerRun)
 ma.setOutputDstFile(lcoutputDST)
 ma.setOutputRecFile(lcoutputREC)
@@ -160,10 +151,10 @@ job.setName(jobname)
 job.setJobGroup(jobGrName)
 job.setILDConfig(ILDConfigVer)
 job.setCPUTime(86400)
+job.setInputData([lcinputREC])
 job.setInputSandbox(["runRecoSplit_any_Tmp.py"])
 job.setOutputSandbox(["*.log","*.sh","MarlinStdRecoParsed.xml","marlin*.xml","*.py "])
 #job.setOutputSandbox(["*.log","*.sh","MarlinStdRecoParsed.xml","marlin*.xml","*.py ","*.root"])
-job.setInputData([lcinputREC])
 #job.setDestinationCE('lyogrid07.in2p3.fr')
 
 job.dontPromptMe()
@@ -176,13 +167,7 @@ if not mares['OK']:
         print mares['Not ok appending Marlin to job']
         quit()
 
-#job.setOutputData(RECoutput,"MyUserJobs/rec/1000-B1b_ws/6f","DESY-SRM")
-#job.setOutputData( RECoutput,"MyProd_v02-00/E250-TDR_ws/higgs","IN2P3-SRM")
-#job.setOutputData( RECoutput,"grid/ilc/prod/ilc/mc-dbd/ild/MyProd_v02-00/E250-TDR_ws/Z_h/" +ireq+ "/rec","IN2P3-SRM")
-#job.setOutputData( RECoutput,"MyProd_" + ILDConfigVer + "/E250-TDR_ws/" + chann + "/" +ireq+ "/rec","CERN-SRM")
 job.setOutputData( RECoutput,"MyProd_" + ILDConfigVer + "/E250-TDR_ws/" + chann + "/" +ireq+ "/rec","IN2P3-SRM")
 print RECoutput
 
-
 print job.submit(dirac)
-
