@@ -9,14 +9,11 @@ import sys, time
 from get_nevts_inIx import *
 from time import gmtime, strftime
 
-#global mergeList
-
 energy = 250
 ILDConfigVer  = "v02-00-01"
 ILCSoftVer    = "ILCSoft-02-00-01_gcc49"
 detectorModel = "ILD_l5_o2_v02"
 detModelSim   = "ILD_l5_v02"
-#outpath="grid/MyTest/mrg"
 
 inChannel=str($idChannel)
 ireq="I" + inChannel
@@ -28,7 +25,6 @@ evtsPerMrg=$evtspmrg
 
 #print mergeList[0]
 #print mergeList
-
 
 if mrgx1 < 10:
    mrgix1 = "00" + str(mrgx1)
@@ -45,7 +41,6 @@ else  :
    mrgix2 = str(mrgx2)
 
 mrg_range=mrgix1 + "-" + mrgix2
-
 
 if iFile < 10:
    ix = ".00" + str(iFile)
@@ -118,13 +113,10 @@ elif ireq == "I106578" :
    chann ="WW_sl"
 elif ireq == "I106607" :
    infile = "E" + str(energy) + "-TDR_ws.P2f_z_h.Gwhizard-1_95.eL.pR." + idin
-   lcinputpath="LFN:/grid/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/2f/"
    chann ="Z_h"
 elif ireq == "I106608" :
    infile = "E" + str(energy) + "-TDR_ws.P2f_z_h.Gwhizard-1_95.eR.pL." + idin
-   lcinputpath="LFN:/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/2f/"
    chann ="Z_h"
-
 else:
      print "Wrong Channel Id !!!!" , inChannel
 
@@ -141,10 +133,9 @@ MRGoutput = []
 # outputs to be saved onto grid SE
 outpath="MyProd_" + ILDConfigVer + "/E250-TDR_ws/" + chann + "/" +ireq+ "/mrg"
 
-
-#jobname="m" + idin + "_" + str(mrg_range)
 jobname="m" + idin + "_" + str(mrgix1)
 print jobname
+
 job = UserJob()
 job.setName(jobname)
 job.setJobGroup(jobGrName)
@@ -161,7 +152,6 @@ job.dontPromptMe()
 slcioconcat = SLCIOConcatenate()
 slcioconcat.setInputFile(mergeList)
 #slcioconcat.setInputFile(mergeList[0])
-#slcioconcat.setNumberOfEvents(4000)
 slcioconcat.setNumberOfEvents(evtsPerMrg)
 slcioconcat.setOutputFile( lcoutputMRG, outpath)
 slcioconcat.setLogFile("merge.log")

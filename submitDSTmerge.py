@@ -16,27 +16,17 @@ fR.close()
 
 def submitDSTmerge(inChannel):
 
-   global lines, mergeList
-
-#   prefixpth="LFN:/ilc/user/k/kurca/grid/ilc/prod/ilc/mc-dbd/ild/MyProd_v02-00/E250-TDR_ws/"
    inFilesList=[]
    ireq="I" + str(inChannel)
    nEvtsArray=get_nevts_inIx(inChannel)
    nfiles= len(nEvtsArray)
    strinChannel= str(inChannel)
    evtsPerRun=200
-   nfmerge = 50 
+   nfmerge = 100 
    evtsPmerge = evtsPerRun*nfmerge
 
    text="No such file or directory"
 #   text="Unknown"
-#   evts=nEvtsArray[iFile]
-#   nJobs = nEvtsArray/evtsPerRun
-#   if (nevts%evtsPerRun >9):
-#       nJobs = nJobs +1
-#   nfmrg_rest=nJobs%nfmerge
-#   print "nfmrg_rest: ", nfmrg_rest
-
 
    print "submitDSTmerge: nfiles ",nfiles, "inChannel=", inChannel
    if inChannel == '106485':
@@ -51,7 +41,6 @@ def submitDSTmerge(inChannel):
        lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-sZe_sl-I106559-rec-DST.lfns","r")
    elif inChannel == '106560':
        lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-sZe_sl-I106560-rec-DST.lfns","r")
-       #lfnlist = file("short_I106560-rec-DST.lfns","r")
    elif inChannel == '106561':
        lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-sZe_sl-I106561-rec-DST.lfns","r")
    elif inChannel == '106562':
@@ -74,6 +63,12 @@ def submitDSTmerge(inChannel):
        lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-ZZ_h-I106574-rec-DST.lfns","r")
    elif inChannel == '106575':
        lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-ZZ_sl-I106575-rec-DST.lfns","r")
+   elif inChannel == '106576':
+       lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-ZZ_sl-I106576-rec-DST.lfns","r")
+   elif inChannel == '106577':
+       lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-WW_sl-I106577-rec-DST.lfns","r")
+   elif inChannel == '106578':
+       lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-WW_sl-I106578-rec-DST.lfns","r")
    elif inChannel == '106607':
        lfnlist = file("ilc-user-k-kurca-MyProd_v02-00-01-E250-TDR_ws-Z_h-I106607-rec-DST.lfns","r")
    elif inChannel == '106608':
@@ -88,7 +83,7 @@ def submitDSTmerge(inChannel):
    lfnlist.close()
 #   xfiles = 1 
 #   for iFile in range(xfiles,xfiles+1,1):
-   for iFile in range(2,nfiles,1):
+   for iFile in range(1,nfiles,1):
        if iFile < 10:
           ix = ".00" + str(iFile)
        elif (iFile>9 and iFile < 100)  :
@@ -103,20 +98,13 @@ def submitDSTmerge(inChannel):
        inFilesList = []
        for exprs in allFilesList:
             if idin in exprs:
-#               exprs="LFN:" + exprs
                l1=exprs.strip()
                inFilesList.append(l1)
 #               print exprs 
 #               print l1
-#       print idin,inFilesList, len(inFilesList)
-#   print(inFilesList[0:10])
-# create list of lists (with 10 files to be merged)
        ndstfiles = len(inFilesList) 
        print ndstfiles 
        for i in range (0,ndstfiles,nfmerge):
-#       for i in range (100,ndstfiles,nfmerge):
-#       for i in range (150,180,nfmerge):
-#        print(i, inFilesList[i:i+nfmerge])
           m1=str(i+1)
           m2=str(i+nfmerge)
           print "Loopi:",i,ndstfiles 
@@ -138,7 +126,6 @@ def submitDSTmerge(inChannel):
                  mergeList.append(ifile)
                  xnfmerge = xnfmerge +1
           evtsPmerge = evtsPerRun*xnfmerge
-#          print "mergeList:", i, mrgrange, xnfmerge
           print "mergeList:", i, mrgrange, xnfmerge, mergeList
           t= Template(lines)
           if os.path.exists("runDSTmerge_Tmp.py"):
@@ -150,10 +137,6 @@ def submitDSTmerge(inChannel):
           fT1.write(t.substitute(idChannel=strinChannel,mrg1=m1,mrg2=m2,mrglist=str(mergeList),ixnfile=str(iFile),evtspmrg=str(evtsPmerge)))
           fT1.close()
           f2 = subprocess.call("python runDSTmerge_Tmp.py", shell=True)
-
-#       print strftime("%Y-%m-%d %H:%M:%S", gmtime())
-#       time.sleep(1)   # Delay for 10 seconds
-#       print strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 if __name__ == "__main__":
   if len(sys.argv) !=2:
