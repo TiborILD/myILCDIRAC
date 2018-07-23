@@ -13,7 +13,6 @@ lines = fR.read()
 fR.close()
 
 def resubmitRecoSplitJobs_any(inChannel, infile, inJob):
-#   global lines,l1, nfiles, nEvtsArray, evtsPerRun, fOut
    '''
         print "Which Channel Id !!!!" , inChannel
    '''
