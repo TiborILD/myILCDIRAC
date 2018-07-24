@@ -21,6 +21,9 @@ def resubmitRecoSplitJobs_any(inChannel, infile, inJob):
    nEvtsArray=get_nevts_inIx(inChannel)
    nfiles= len(nEvtsArray)
    strinChannel= str(inChannel)
+   if int(infile) > nfiles:
+      print "Impossible:  infile  ", infile, " > Max Files", nfiles
+      sys.exit(-1)
 
 #Here loop over any available generator file infile:
    for iFile in range(int(infile),int(infile)+1,1):
@@ -31,11 +34,14 @@ def resubmitRecoSplitJobs_any(inChannel, infile, inJob):
        nJobs = evts/evtsPerRun
        if (evts%evtsPerRun >9):
            nJobs = nJobs +1
-       nJobs = inJob 
        delta = 1
        snJobs = str(nJobs)
        sevts = str(evts)
-       for ijob in range(int(nJobs),int(nJobs)+delta,1):
+       if int(inJob) > nJobs:
+          print "Impossible:  inJob  ", inJob, " > Max Jobs", nJobs
+          sys.exit(-1)
+
+       for ijob in range(int(inJob),int(inJob)+delta,1):
            sijob = str(ijob)
            print iFile , "Total evts= ", evts, "corrected nJobs= ", nJobs, "ijob= ", ijob
            t= Template(lines)
