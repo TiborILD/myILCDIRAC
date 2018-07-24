@@ -41,18 +41,12 @@ elif   ireq == "I106486" :
    infile = "E" + str(energy) + "-TDR_ws.Pqqh.Gwhizard-1_95.eR.pL." + idin
    lcinputpath  = "LFN:/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/higgs/" 
    chann ="higgs"
-elif   ireq == "I106563" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pL." + idin
-   chann ="sW_sl"
-elif ireq == "I106564" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pR." + idin
-   chann ="sW_sl"
-elif ireq == "I106565" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pR." + idin
-   chann ="sW_sl"
-elif ireq == "I106566" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pL." + idin
-   chann ="sW_sl"
+elif ireq == "I106551" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eL.pR." + idin
+   chann ="WW_h"
+elif ireq == "I106552" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eR.pL." + idin
+   chann ="WW_h"
 elif ireq == "I106559" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_sze_sl.Gwhizard-1_95.eL.pL." + idin
    chann ="sZe_sl"
@@ -65,6 +59,18 @@ elif ireq == "I106561" :
 elif ireq == "I106562" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_sze_sl.Gwhizard-1_95.eR.pL." + idin
    chann ="sZe_sl"
+elif ireq == "I106563" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pL." + idin
+   chann ="sW_sl"
+elif ireq == "I106564" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eL.pR." + idin
+   chann ="sW_sl"
+elif ireq == "I106565" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pR." + idin
+   chann ="sW_sl"
+elif ireq == "I106566" :
+   infile = "E" + str(energy) + "-TDR_ws.P4f_sw_sl.Gwhizard-1_95.eR.pL." + idin
+   chann ="sW_sl"
 elif ireq == "I106571" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_sznu_sl.Gwhizard-1_95.eL.pR." + idin
    chann ="sZnu_sl"
@@ -89,12 +95,6 @@ elif ireq == "I106577" :
 elif ireq == "I106578" :
    infile = "E" + str(energy) + "-TDR_ws.P4f_ww_sl.Gwhizard-1_95.eR.pL." + idin
    chann ="WW_sl"
-elif ireq == "I106551" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eL.pR." + idin
-   chann ="WW_h"
-elif ireq == "I106552" :
-   infile = "E" + str(energy) + "-TDR_ws.P4f_ww_h.Gwhizard-1_95.eR.pL." + idin
-   chann ="WW_h"
 elif ireq == "I106607" :
    infile = "E" + str(energy) + "-TDR_ws.P2f_z_h.Gwhizard-1_95.eL.pR." + idin
    lcinputpath="LFN:/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/2f/"
@@ -103,20 +103,17 @@ elif ireq == "I106608" :
    infile = "E" + str(energy) + "-TDR_ws.P2f_z_h.Gwhizard-1_95.eR.pL." + idin
    lcinputpath="LFN:/ilc/prod/ilc/mc-dbd/generated/250-TDR_ws/2f/"
    chann ="Z_h"
-
 else:
      print "Wrong Channel Id !!!!" , inChannel
 
 jobGrName="group_" + chann
 print infile, jobGrName
 
-
 genfile = infile + ".stdhep"
 detModelSim = "ILD_l5_v02"
 simOutfile = "s" + ILDConfigVer + ".m" + detModelSim + ".LQGSP_BERT." + infile 
 jobGroup = idin + "_" + detModelSim
 dirac = DiracILC(True,jobGroup+".rep")
-
 
 # outputs to be saved onto grid SE
 SIMoutput = []  
@@ -130,7 +127,6 @@ else  :
    indx = str(ixjob)
 
 jobname = "s" + idin + "_" + indx
-#lcinputSIM  = "LFN:/ilc/prod/ilc/mc-dbd/generated/" + genfile
 lcinputSIM  = lcinputpath + genfile
 lcoutputSIM  = simOutfile + "_%s.SIM.slcio"%(indx)
 print lcinputSIM
@@ -143,10 +139,10 @@ job.setName(jobname)
 job.setJobGroup(jobGrName)
 job.setILDConfig(ILDConfigVer)
 job.setCPUTime(86400)
+job.setInputSandbox(["runSimSplit_any_Tmp.py"])
 job.setOutputSandbox(["*.log","*.sh","*.py "])
 #job.setOutputData(lcoutputSIM,OutputPath="MyTest/sim1",OutputSE="IN2P3-SRM")
 job.setOutputData( SIMoutput,"MyProd_" + ILDConfigVer + "/E250-TDR_ws/" + chann + "/" +ireq+ "/sim","IN2P3-SRM")
-job.setInputSandbox(["runSimSplit_any_Tmp.py"])
 #job.setDestinationCE('lyogrid07.in2p3.fr')
 
 job.dontPromptMe()

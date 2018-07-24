@@ -1,4 +1,3 @@
-# ...........................
 # python submitSimSplit_any.py
 
 import sys, os, subprocess
@@ -13,41 +12,34 @@ fR = file("runSimSplit_any.py","r")
 lines = fR.read()
 fR.close()
 
-
-
-def submitSimSplitJobs_any(inChannel):
-   global lines,l1, nfiles, nEvtsArray, evtsPerRun, fOut
+def submitSimSplitJobs_any(inChannel, infile, inJob):
    '''
         print "Wrong Channel Id !!!!" , inChannel
    '''
-#   print nEvtsArray[0]
    nEvtsArray=get_nevts_inIx(inChannel)
    nfiles= len(nEvtsArray)
    strinChannel= str(inChannel)
    print "submitSimSplitJobs_any: nfiles ",nfiles, "inChannel=", inChannel
- 
-
 
    evtsPerRun = 200
-#   nfiles=6
-#   event1= 36601
-#   event1= 1
-#   fstevt=str(event1)
 #Here loop over all available generator files i:
    strevtsprun = str(evtsPerRun)
-   for iFile in range(1,nfiles,1):
-#   for iFile in range(nfiles,nfiles+1,1):
+   if int(infile) > nfiles:
+      print "Impossible:  infile  ", infile, " > Max Files", nfiles
+      sys.exit(-1)
+   for iFile in range(int(infile),int(infile)+1,1):
        striFile = str(iFile)
-#       nevents= nEvtsArray[iFile] - (event1 - 1)
        nevents= nEvtsArray[iFile] 
        nJobs = nevents/evtsPerRun
        if (nevents%evtsPerRun >9):
            nJobs = nJobs +1
-#       nJobs=49
        snJobs = str(nJobs)
+       if int(inJob) > nJobs:
+         print "Impossible:  inJob  ", inJob, " > Max Jobs", nJobs
+         sys.exit(-1)
+       delta = 1
        print "iFile : Evts - corrected nJobs= ",iFile, nevents, nJobs
-       for ijob in range(1,nJobs+1,1):
-#       for ijob in range(nJobs,nJobs+1,1):
+       for ijob in range(int(inJob),int(inJob)+delta,1):
           evtStart = (ijob-1)*evtsPerRun + 1
           fstevt = str(evtStart)
           sijob = str(ijob)
@@ -59,19 +51,11 @@ def submitSimSplitJobs_any(inChannel):
           fT.close()
           print iFile, fstevt, sijob
           f2 = subprocess.call("python runSimSplit_any_Tmp.py", shell=True)
-       if iFile < nfiles - 1 :
-          print strftime("%Y-%m-%d %H:%M:%S", gmtime())
-          print("Sleeping for 10 min between submissions of 2 input files ...")
-          time.sleep(600)   # Delay for 1 minute (60 seconds)
-          print strftime("%Y-%m-%d %H:%M:%S", gmtime())
-
 
 if __name__ == "__main__":
-  if len(sys.argv) !=2:
-    print "usage: python submitSimSplit_any.py  inChannel (e.g.:  106608)"
-    print sys.argv[1]
+  if len(sys.argv) !=4:
+    print "usage: python submitSimSplit_any.py  inChannel ifile ijob (e.g.:  106608 1 33)"
+    print sys.argv[1], sys.argv[2], sys.argv[3]
     sys.exit(-1)
-  print sys.argv[1]
-  submitSimSplitJobs_any(sys.argv[1])
-
-
+  print sys.argv[1], sys.argv[2], sys.argv[3]
+  submitSimSplitJobs_any(sys.argv[1],sys.argv[2],sys.argv[3])
