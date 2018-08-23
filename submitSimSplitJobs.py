@@ -27,7 +27,6 @@ def submitSimSplitJobs(inChannel, infile, inJob, delta):
      infile =  1
      maxfile = nfiles
 
-
    evtsPerRun = 200
 #Here loop over all available generator files i:
    strevtsprun = str(evtsPerRun)
